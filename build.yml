@@ -1,0 +1,35 @@
+---
+# build
+parameters:
+- name: parametroUm
+  type: string
+  default: 'parametroUm: Valor padrao quando nao passam um valor para mim'
+
+- name: parametroDois
+  type: string
+  default: ''
+
+- name: parametroTres
+  type: string
+  default: ''
+
+steps: 
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "Sou uma task pre definida chamada PowerShell@2"
+        Write-Host "Valor do parametro [parametroUm]: ${{parameters.parametroUm}}"
+        Write-Host "Valor do parametro [parametroDois]: ${{parameters.parametroDois}}"
+        Write-Host "Valor do parametro [parametroTres]: ${{parameters.parametroTres}}"
+        New-Item -Path 'NovaPasta' -ItemType Directory
+      workingDirectory: $(System.DefaultWorkingDirectory)
+    displayName: 'Usando uma Task pre definida [PowerShell@2]'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publicando artefatos na execucao do pipeline'
+    inputs:
+      PathtoPublish: $(System.DefaultWorkingDirectory)/NovaPasta
+      ArtifactName: 'Nome do Meu Artefato'
+    condition: always()  
+...
